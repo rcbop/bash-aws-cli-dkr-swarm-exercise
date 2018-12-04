@@ -1,0 +1,12 @@
+[manager]
+##MANAGERIP##
+[manager:vars]
+ansible_ssh_user=##EC2USER##
+ansible_ssh_private_key_file=##KEYPATH##
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+[worker]
+##WORKERSIPS##
+[worker:vars]
+ansible_ssh_user=##EC2USER##
+ansible_ssh_private_key_file=##KEYPATH##
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'

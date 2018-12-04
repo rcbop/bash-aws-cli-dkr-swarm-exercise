@@ -1,0 +1,38 @@
+---
+# #################
+# must pre-install python 2.7 and pip
+# #################
+- hosts: "{{ dynamic_hosts }}"
+  become: true
+  become_method: sudo
+  gather_facts: False
+  tasks:
+    - name: Install python 2
+      raw: test -e /usr/bin/python || (apt -yqq update && apt install -qqy python-minimal python-pip)
+
+    - name: Start docker
+      service:
+        name: docker
+        state: running
+
+    - name: env
+      raw: env && echo $PATH
+
+    ##############################
+    # avoid compatibility problems
+    ##############################
+    - name: Install docker-py to latest
+      pip:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - docker-py
+
+    ##############################
+    # docker.sock permissions
+    ##############################
+    - name: Add Group docker
+      shell: groupadd docker || echo 'docker group already exists'
+
+    - name: Add current user to docker group
+      shell: usermod -aG docker $USER || echo 'user already in group'

@@ -1,0 +1,9 @@
+---
+#
+# PLAYBOOK FOR TESTING EC2 DYNAMIC INVENTORY
+#
+- hosts: "{{ dynamic_hosts }}"
+  gather_facts: false
+  tasks:
+    - debug: var=dynamic_hosts
+    - ping:

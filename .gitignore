@@ -1,0 +1,6 @@
+logs
+password.properties
+aws-variables-out.properties
+aws-variables.properties
+*.zip
+

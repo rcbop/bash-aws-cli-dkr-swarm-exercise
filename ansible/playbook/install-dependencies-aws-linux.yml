@@ -1,0 +1,36 @@
+---
+- hosts: "{{ dynamic_hosts }}"
+  become: true
+  become_method: sudo
+  gather_facts: True
+  tasks:
+    ##############################
+    # install python pip
+    ##############################
+    - name: 'Install Python PIP (RHEL)'
+      tags: 'aws-cli'
+      become: 'yes'
+      action: yum name=python-pip state=present
+      no_log: False
+      when: "ansible_pkg_mgr == 'yum'"
+
+    ##############################
+    # avoid compatibility problems
+    ##############################
+    - name: Install docker-py awscli docker-compose to latest
+      pip:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - docker-py
+        - awscli
+        - docker-compose
+
+    ##############################
+    # docker.sock permissions
+    ##############################
+    - name: Add Group docker
+      shell: groupadd docker || echo 'docker group already exists'
+
+    - name: Add current user to docker group
+      shell: usermod -aG docker $USER || echo 'user already in group'

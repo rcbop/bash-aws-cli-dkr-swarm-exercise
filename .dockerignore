@@ -1,0 +1,8 @@
+deploy-to-s3.sh
+aws-variables-out.properties
+.git
+password.properties
+*.zip
+Dockerfile
+.gitignore
+logs

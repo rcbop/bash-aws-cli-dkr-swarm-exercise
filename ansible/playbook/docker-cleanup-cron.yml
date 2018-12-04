@@ -1,0 +1,22 @@
+---
+# #################
+# cleanup task:
+#   downloads spotify's docker-gc image
+#   and creates a cron job that will cleanup
+#   the docker environment every three hours
+# #################
+- hosts: "{{ dynamic_hosts }}"
+  become: true
+  tasks:
+    - name: Pull image
+      shell: /usr/bin/docker pull spotify/docker-gc
+    - name: "Remove previous cleanup cronjob"
+      cron:
+        name: "docker system cleanup"
+        state: absent
+    - name: "Create cleanup task"
+      cron:
+        name: "docker garbage collector"
+        minute: "0"
+        hour: "*/3"
+        job: "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v /etc:/etc:ro spotify/docker-gc"
